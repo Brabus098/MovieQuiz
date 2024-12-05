@@ -1,15 +1,11 @@
-//
 //  MovieQuizUITestsForConfertFunc.swift
-//  MovieQuizUITestsForConfertFunc
-//
-//
 
 import XCTest
 @testable import MovieQuiz
 
 final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
 
-    func show(quiz step: QuizStepViewModel) {}
+    func show(quiz step: QuizStepModel) {}
     func highlightImageBorder(isCorrectAnswer: Bool) {}
     func showLoadingIndicator() {}
     func hideLoadingIndicator() {}
@@ -24,7 +20,7 @@ final class MovieQuizPresenterTests: XCTestCase {
         let sut = MovieQuizPresenter(viewController: viewControllerMock, statisticService: nil)
         
         let emptyData = Data()
-        let question = QuizQuestion(image: emptyData, text: "Question Text", correctAnswer: true)
+        let question = QuizQuestionModel(image: emptyData, text: "Question Text", correctAnswer: true)
         let viewModel = sut.convert(model: question)
         
         XCTAssertNotNil(viewModel.image)

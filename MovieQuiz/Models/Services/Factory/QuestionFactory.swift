@@ -1,9 +1,11 @@
 import Foundation
 
+// MARK: Инкапсулирует логику создания вопросов
+
 final class QuestionFactory: QuestionFactoryProtocol {
     
     private let moviesLoader: MoviesLoading
-    private weak var delegate: QuestionFactoryDelegate?
+    private weak var delegate: QuestionFactoryDelegate? // для обратной связи
     private var movies: [MostPopularMovie] = []
     
     enum SystemError: String, Error {
@@ -15,7 +17,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
         self.delegate = delegate
     }
     
-    func loadData() {
+    func loadData() { // Загрузка данных
         moviesLoader.loadMovies { [weak self] result in
             DispatchQueue.main.async{
                 guard let self = self else { return }
@@ -34,8 +36,8 @@ final class QuestionFactory: QuestionFactoryProtocol {
         }
     }
     
-    func requestNextQuestion() {
- 
+    func requestNextQuestion() { // Генерация вопроса + Управление логикой создания вопросов
+        
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
@@ -57,15 +59,13 @@ final class QuestionFactory: QuestionFactoryProtocol {
             }
             
             // Загружаем рейтинг и формируем текст вопроса
-            
-            
             let rating = Float(movie.rating) ?? 0
             let questionRating = 7
             let text = "Рейтинг этого фильма больше чем \(questionRating)?"
             let correctAnswer = rating > Float(questionRating)
             
             // Создаем данные для вывода на экран
-            let question = QuizQuestion(image: imageData,
+            let question = QuizQuestionModel(image: imageData,
                                         text: text,
                                         correctAnswer: correctAnswer)
             
@@ -76,50 +76,3 @@ final class QuestionFactory: QuestionFactoryProtocol {
         }
     }
 }
-
-
-/*
- TODO
- private let questions: [QuizQuestion] = [
- QuizQuestion(
- image: "The Godfather",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: true),
- QuizQuestion(
- image: "The Dark Knight",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: true),
- QuizQuestion(
- image: "Kill Bill",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: true),
- QuizQuestion(
- image: "The Avengers",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: true),
- QuizQuestion(
- image: "Deadpool",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: true),
- QuizQuestion(
- image: "The Green Knight",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: true),
- QuizQuestion(
- image: "Old",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: false),
- QuizQuestion(
- image: "The Ice Age Adventures of Buck Wild",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: false),
- QuizQuestion(
- image: "Tesla",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: false),
- QuizQuestion(
- image: "Vivarium",
- text: "Рейтинг этого фильма больше чем 6?",
- correctAnswer: false)
- ]
- */

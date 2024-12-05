@@ -19,20 +19,18 @@ final class MovieQuizUITests: XCTestCase {
         try super.tearDownWithError()
         app.terminate()
         app = nil
-        
     }
     
     func testYesButton() {
         
         sleep(3)
         
-        
         let firstPoster = app.images["Poster"] // находим первоначальный постер
         let firstPosterData = firstPoster.screenshot().pngRepresentation // делаем скрин для сравнения
         
         app.buttons["Yes"].tap() // находим кнопку да и нажимаем на ее
         
-        sleep(3)
+        sleep(5)
         
         let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
@@ -51,7 +49,7 @@ final class MovieQuizUITests: XCTestCase {
         
         app.buttons["No"].tap() // находим кнопку нет и нажимаем на ее
         
-        sleep(3)
+        sleep(5)
         
         let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
@@ -63,10 +61,11 @@ final class MovieQuizUITests: XCTestCase {
     }
     
     func testGameFinish() {
-        sleep(2)
+        sleep(3)
+        
         for _ in 1...10 {
             app.buttons["No"].tap()
-            sleep(2)
+            sleep(6)
         }
 
         let alert = app.alerts["Этот раунд окончен!"]
@@ -77,16 +76,16 @@ final class MovieQuizUITests: XCTestCase {
     }
 
     func testAlertDismiss() {
-        sleep(2)
+        sleep(5)
         for _ in 1...10 {
             app.buttons["No"].tap()
-            sleep(2)
+            sleep(6)
         }
         
         let alert = app.alerts["Этот раунд окончен!"]
         alert.buttons.firstMatch.tap()
         
-        sleep(2)
+        sleep(5)
         
         let indexLabel = app.staticTexts["Index"]
         

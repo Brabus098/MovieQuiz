@@ -1,15 +1,16 @@
 import Foundation
 
-struct MostPopularMovies: Codable{
+struct MostPopularMovies: Codable {
     let errorMessage: String
     let items: [MostPopularMovie] // список с фильмами
 }
 
-struct MostPopularMovie: Codable{
+struct MostPopularMovie: Codable {
     let title: String
     let rating: String
     let imageURL: URL
     
+    // Оптимизация размера изображения
     var resizedImageURL: URL {
         // создаем строку из адреса
         let urlString = imageURL.absoluteString

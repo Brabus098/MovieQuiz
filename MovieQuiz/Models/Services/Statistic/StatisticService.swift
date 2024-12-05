@@ -17,9 +17,9 @@ final class StatisticService: StatisticServiceProtocol {
     
     // MARK: - Computed properties
     private var correctAnswers: Int { // количество правильных ответов всего
-        
-        get {storage.integer(forKey: Keys.correctAnswers.rawValue) }
-        set {storage.set(newValue, forKey: Keys.correctAnswers.rawValue) }
+
+        get { storage.integer(forKey: Keys.correctAnswers.rawValue) }
+        set { storage.set(newValue, forKey: Keys.correctAnswers.rawValue) }
     }
     
     var gamesCount: Int { // количество завершенных игр
