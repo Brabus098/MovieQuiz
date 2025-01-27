@@ -2,15 +2,15 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     
-    
     // MARK: - Properties
-    @IBOutlet private var questionTitleLabel: UILabel! // лэйбл со словом - "вопрос"
-    @IBOutlet private var textLabel: UILabel! // textLabel в учебнике. Главный вопрос
-    @IBOutlet private var counterLabel: UILabel! // counterLabel в учебнике. Количество вопросов
-    @IBOutlet private var imageView: UIImageView! // обложка фильма
     
+    @IBOutlet private weak var questionTitleLabel: UILabel!
+    @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var imageView: UIImageView!
     
     // MARK: - Model view
+    
     // вью модель со структурой вопроса
     private struct QuizQuestion {
         // строка с названием фильма,
@@ -43,6 +43,7 @@ final class MovieQuizViewController: UIViewController {
     }
     
     // MARK: - Counters & Mock
+    
     private let questions: [QuizQuestion] = [
         QuizQuestion(
             image: "The Godfather",
@@ -90,26 +91,26 @@ final class MovieQuizViewController: UIViewController {
     
     private var currentQuestionIndex = 0 // переменная с индексом текущего вопроса
     
-    
-    
-    
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
-        counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        
+        setupFonts()
         // берём текущий вопрос из массива вопросов по индексу текущего вопроса
         let currentQuestion = questions[currentQuestionIndex]
         
         // Конвертируем моковые данные(для текущего вопроса согласно "currentQuestionIndex") во вью модель, и выводим результат
         show(quiz: convert(model: currentQuestion))
-        
     }
     
-    
     // MARK: - Methods
+    
+    // метод настройки шрифтов
+    private func setupFonts() {
+            questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+            textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
+            counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        }
     
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -120,8 +121,6 @@ final class MovieQuizViewController: UIViewController {
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
     }
     
-    
-    
     // приватный метод вывода на экран вопроса
     private func show(quiz step: QuizStepViewModel) {
         
@@ -130,11 +129,9 @@ final class MovieQuizViewController: UIViewController {
         counterLabel.text = step.questionNumber
     }
     
-    
-    
     // приватный метод, который меняет цвет рамки, переходит в следующее состояние в зависимости от количества отвеченых вопросов
     private func showAnswerResult(isCorrect: Bool) {
-        if isCorrect {correctAnswers += 1} // считаем правильные ответы
+        if isCorrect { correctAnswers += 1 } // считаем правильные ответы
         
         // Красим рамку
         imageView.layer.masksToBounds = true // Даём разрешение на рисование рамки
@@ -143,11 +140,10 @@ final class MovieQuizViewController: UIViewController {
         
         // показываем следующий вопрос через 1 секунду
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.imageView.layer.borderWidth = 0
             self.showNextQuestionOrResults()
         }
     }
-    
-    
     
     // приватный метод, который содержит логику перехода в один из сценариев
     private func showNextQuestionOrResults() {
@@ -164,8 +160,6 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
         }
     }
-    
-    
     
     // приватный метод для показа результатов раунда квиза
     private func show(quiz result: QuizResultsViewModel) {
@@ -189,13 +183,14 @@ final class MovieQuizViewController: UIViewController {
     }
     
     // MARK: Buttons
+    
     @IBAction private func noButtonClicked(_ sender: Any) {
         let currentQuestion = questions[currentQuestionIndex].correctAnswer
         let givenAnswer = false
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion)
-        
     }
+    
     @IBAction private func yesButtonClicked(_ sender: Any) {
         let currentQuestion = questions[currentQuestionIndex].correctAnswer
         let givenAnswer = true
