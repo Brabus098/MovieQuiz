@@ -114,23 +114,29 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Bbl-C5-wkX">
+                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black (iOS)"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="V6x-gS-y9c" secondAttribute="bottom" id="AFM-Xh-7Pp"/>
+                            <constraint firstItem="Bbl-C5-wkX" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Dsm-Gx-x9v"/>
                             <constraint firstItem="V6x-gS-y9c" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Ifp-Oh-v2M"/>
                             <constraint firstItem="V6x-gS-y9c" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Ye3-hL-UFw"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="V6x-gS-y9c" secondAttribute="trailing" constant="20" id="dBU-yu-G6I"/>
+                            <constraint firstItem="Bbl-C5-wkX" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="w7y-uJ-BNa"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="NoButton" destination="51e-uM-MdW" id="4LR-hd-bbm"/>
-                        <outlet property="YesButton" destination="TaB-Vj-kMN" id="l7u-ja-hqv"/>
+                        <outlet property="activityIndicator" destination="Bbl-C5-wkX" id="ZtM-9s-tLt"/>
                         <outlet property="counterLabel" destination="Nsd-cc-p3R" id="d58-dc-Rqc"/>
                         <outlet property="imageView" destination="27J-Xt-Cn4" id="Dp7-Aq-AmV"/>
+                        <outlet property="noButton" destination="51e-uM-MdW" id="egz-bV-nb9"/>
                         <outlet property="questionTitleLabel" destination="4r3-ID-u3j" id="rGP-bv-wHU"/>
                         <outlet property="textLabel" destination="4CY-k4-oO3" id="s6A-1T-ysC"/>
+                        <outlet property="yesButton" destination="TaB-Vj-kMN" id="gYv-in-Byg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
