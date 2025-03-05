@@ -1,15 +1,8 @@
-//
-//  QuizStepViewModel.swift
-//  MovieQuiz
-//
-//  Created by Владимир on 03.02.2025.
-//
-
 import Foundation
 import UIKit
 
 // вью модель для состояния "Вопрос показан"
-    struct QuizStepViewModel {
+struct QuizStepViewModel {
     // картинка с афишей фильма с типом UIImage
     let image: UIImage
     // вопрос о рейтинге квиза

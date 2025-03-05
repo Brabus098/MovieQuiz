@@ -1,13 +1,6 @@
-//
-//  StatisticService.swift
-//  MovieQuiz
-//
-//  Created by Владимир on 13.02.2025.
-//
-
 import Foundation
 
-class StatisticService: StatisticServiceProtocol {
+final class StatisticService: StatisticServiceProtocol {
     
     // MARK: - Remove duplication
     private let storage: UserDefaults = .standard
@@ -25,14 +18,14 @@ class StatisticService: StatisticServiceProtocol {
     // MARK: - Computed properties
     private var correctAnswers: Int { // количество правильных ответов всего
         
-        get {storage.integer(forKey: Keys.correctAnswers.rawValue)}
-        set {storage.set(newValue, forKey: Keys.correctAnswers.rawValue)}
+        get {storage.integer(forKey: Keys.correctAnswers.rawValue) }
+        set {storage.set(newValue, forKey: Keys.correctAnswers.rawValue) }
     }
     
     var gamesCount: Int { // количество завершенных игр
         
         get { storage.integer(forKey: Keys.gamesCount.rawValue) }
-        set {storage.set(newValue, forKey: Keys.gamesCount.rawValue)}
+        set { storage.set(newValue, forKey: Keys.gamesCount.rawValue) }
     }
     
     var bestGame: GameResult { // информация о лучшей попытке
@@ -53,15 +46,8 @@ class StatisticService: StatisticServiceProtocol {
     }
     
     var totalAccuracy: Double { // средняя точность правильных ответов за все игры в процентах
-        
-        // Журнал результатов в консоль
-        print("Правильные ответы \(correctAnswers)")
-        print("Кол-во игр: \(gamesCount)")
         let result = (Double(correctAnswers) / Double(gamesCount * 10)) * 100
-        print("Результат: \(result)")
-        
-        return result
-    }
+        return result }
     
     // MARK: - Function
     func store(correct count: Int, total amount: Int) {

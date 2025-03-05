@@ -8,9 +8,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
-    
-    @IBOutlet weak var NoButton: UIButton!
-    @IBOutlet weak var YesButton: UIButton!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var noButton: UIButton!
+    @IBOutlet weak var yesButton: UIButton!
     
     // MARK: - Counters & Mock
     
@@ -26,6 +26,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var statistic: StatisticServiceProtocol?
     
     
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -33,9 +34,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         setupFonts()
         
         // Создаем фабрику вопросов
-        let questionFactory = QuestionFactory()
-        questionFactory.delegate = self
+        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        
+        //questionFactory.delegate = self
         self.questionFactory = questionFactory
+        
+        //Показываем индикатор
+        showLoadingIndicator()
+        
+        // Начинаем загружать данные
+        questionFactory.loadData()
         
         // Создаем алерт
         alertPresent = AlertPresenter(controler: self)
@@ -43,12 +51,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // Объявляем свойство статистики
         statistic = StatisticService()
         
-        // Вызываем метод показа следующего вопроса
-        questionFactory.requestNextQuestion()
     }
     
     // MARK: - QuestionFactoryDelegate
-    
+    // Осуществляем показ с полученных данных из сети
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return }
         
@@ -59,16 +65,31 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self?.show(quiz: viewModel)
         }
     }
+    // Принимаем инфу об успешном результате от делегата
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+    // Принимаем ошибку в случае если данные не получены
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+    }
     
     // MARK: - Methods
     
     // метод заполнения алерта
-    func presentAlertResult() {
+    private func presentAlertResult() {
         guard let stata = statistic else{return} // проверка на налияие значения
         stata.store(correct: correctAnswers, total: questionsAmount) // функция сравнения результата с лучшим
         let totalFormated = "\(String(format: "%.2f", stata.totalAccuracy))" // форматируем дату
-        let alert = AlertModel(title: "Этот раунд окончен!",
-                               message: "Ваш результат: \(correctAnswers)/\(questionsAmount)\n Количество сыгранных квизов: \(stata.gamesCount) \n Рекорд: \(stata.bestGame.correct)/\(questionsAmount) (\((stata.bestGame.date).dateTimeString)) \n Средняя точность: \(totalFormated)%",
+        let alert = AlertModel(
+                               title: "Этот раунд окончен!",
+                               message: """
+                               Ваш результат: \(correctAnswers)/\(questionsAmount)  
+                               Количество сыгранных квизов: \(stata.gamesCount)  
+                               Рекорд: \(stata.bestGame.correct)/\(questionsAmount) (\((stata.bestGame.date).dateTimeString))
+                               Средняя точность: \(totalFormated)% 
+                               """,
                                buttonText: "Сыграть еще раз",
                                completion: { [weak self] in // слабая ссылка на self
             guard let self = self else { return }
@@ -88,11 +109,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
     }
     
-    // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
+    // метод конвертации, который принимает сетевые данные и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         
         return QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
     }
@@ -140,12 +162,39 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Приватный метод переключения состояния кнопки
     private func switchButton(status: Bool) {
         if status {
-            YesButton.isEnabled = true
-            NoButton.isEnabled = true
+            yesButton.isEnabled = true
+            noButton.isEnabled = true
         } else {
-            YesButton.isEnabled = false
-            NoButton.isEnabled = false
+            yesButton.isEnabled = false
+            noButton.isEnabled = false
         }
+    }
+    
+    // Приватный метод загрузки индикатора
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
+        activityIndicator.startAnimating() // включаем анимацию
+    }
+    
+    private func showNetworkError(message: String) {
+        showLoadingIndicator() // скрываем индикатор загрузки
+        // создайте и покажите алерт
+        let errorModel = AlertModel(title: "Ошибка", message: message, buttonText: "Попробовать еще раз", completion: { [weak self] in // слабая ссылка на self
+            guard let self = self else { return }
+            
+            if currentQuestionIndex == .zero {
+                self.questionFactory?.loadData() // если ошибка возникла при первом вызове
+            } else {
+                activityIndicator.isHidden = true
+                self.questionFactory?.requestNextQuestion()
+                // обнуляем результаты текущей игры
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+            }
+        })
+        
+        alertPresent?.presentAlerts(alertModel: errorModel)
+        
     }
     
     // MARK: Buttons
@@ -169,4 +218,3 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 }
-
