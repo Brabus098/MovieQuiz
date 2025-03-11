@@ -35,6 +35,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
     }
     
     func requestNextQuestion() {
+ 
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
@@ -56,10 +57,12 @@ final class QuestionFactory: QuestionFactoryProtocol {
             }
             
             // Загружаем рейтинг и формируем текст вопроса
-            let rating = Float(movie.rating) ?? 0
             
-            let text = "Рейтинг этого фильма больше чем \(rating)?"
-            let correctAnswer = rating > 7
+            
+            let rating = Float(movie.rating) ?? 0
+            let questionRating = 7
+            let text = "Рейтинг этого фильма больше чем \(questionRating)?"
+            let correctAnswer = rating > Float(questionRating)
             
             // Создаем данные для вывода на экран
             let question = QuizQuestion(image: imageData,
