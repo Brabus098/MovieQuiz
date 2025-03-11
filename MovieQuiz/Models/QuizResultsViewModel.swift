@@ -1,14 +1,7 @@
-//
-//  QuizResultsViewModel.swift.swift
-//  MovieQuiz
-//
-//  Created by Владимир on 03.02.2025.
-//
 import Foundation
 
-
 // вью модель для состояния "Результат квиза"
-    struct QuizResultsViewModel {
+struct QuizResultsViewModel {
     // строка с заголовком алерта
     let title: String
     // строка с текстом о количестве набранных очков
