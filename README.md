@@ -9,9 +9,9 @@
 **MovieQuiz** - увлекательное iOS-приложение с квизами о фильмах из топ-250 рейтинга и самых популярных фильмов по версии IMDb. Проверь свои знания о кинематографе и улучши результат с каждым раундом!
 
 <p align="center">
-  <img src="https://github.com/Brabus098/MovieQuiz/blob/main/Screenshots/error.png?raw=true" width="200" alt="Экран ошибки">
-  <img src="https://github.com/Brabus098/MovieQuiz/blob/main/Screenshots/results.png?raw=true" width="200" alt="Результаты игры">
-  <img src="https://github.com/Brabus098/MovieQuiz/blob/main/Screenshots/main-screen.png?raw=true" width="200" alt="Главный экран">
+  <img src="https://github.com/Brabus098/MovieQuiz/blob/main/error.png?raw=true" width="200" alt="Экран ошибки">
+  <img src="https://github.com/Brabus098/MovieQuiz/blob/main/results.png?raw=true" width="200" alt="Результаты игры">
+  <img src="https://github.com/Brabus098/MovieQuiz/blob/main/main-screen.png?raw=true" width="200" alt="Главный экран">
 </p>
 
 ## 🎮 Возможности
